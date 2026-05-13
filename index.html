@@ -65,9 +65,9 @@
   .stat-card .lbl { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
   .stat-card .val { font-family: 'Syne', sans-serif; font-size: 28px; font-weight: 800; }
 
-  .table-header { display: grid; grid-template-columns: 220px 120px 1fr 140px; gap: 12px; padding: 10px 16px; font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid var(--border); margin-bottom: 4px; }
+  .table-header { display: grid; grid-template-columns: 200px 110px 200px 1fr; gap: 12px; padding: 10px 16px; font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid var(--border); margin-bottom: 4px; }
   .tier-label { font-size: 10px; color: var(--accent2); text-transform: uppercase; letter-spacing: 2px; padding: 8px 16px; background: rgba(251,191,36,0.05); border-left: 2px solid var(--accent2); margin-bottom: 4px; margin-top: 8px; }
-  .person-row { display: grid; grid-template-columns: 220px 120px 1fr 140px; gap: 12px; padding: 10px 16px; border-bottom: 1px solid rgba(42,42,53,0.5); align-items: center; transition: background 0.1s; }
+  .person-row { display: grid; grid-template-columns: 200px 110px 200px 1fr; gap: 12px; padding: 10px 16px; border-bottom: 1px solid rgba(42,42,53,0.5); align-items: center; transition: background 0.1s; }
   .person-row:hover { background: var(--surface2); }
   .person-name { font-size: 13px; }
 
@@ -75,18 +75,33 @@
   .checkbox-wrap input[type="checkbox"] { width: 16px; height: 16px; accent-color: var(--accent); cursor: pointer; }
   .att-lbl { font-size: 11px; color: var(--muted); }
 
-  .status-badge { display: inline-block; padding: 3px 10px; border-radius: 4px; font-size: 11px; font-weight: 500; }
+  .workbook-cell { display: flex; align-items: center; gap: 8px; }
+  .status-badge { display: inline-block; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: 500; flex-shrink: 0; }
   .status-submitted { background: rgba(34,197,94,0.15); color: var(--success); }
-  .status-missing { background: rgba(239,68,68,0.1); color: var(--muted); }
+  .status-missing { background: rgba(100,100,120,0.15); color: var(--muted); }
 
-  .upload-btn { display: flex; align-items: center; gap: 6px; padding: 5px 12px; border: 1px dashed var(--border); border-radius: 4px; background: none; color: var(--muted); font-family: 'DM Mono', monospace; font-size: 11px; cursor: pointer; transition: all 0.15s; white-space: nowrap; }
+  .upload-btn { display: flex; align-items: center; gap: 5px; padding: 4px 10px; border: 1px dashed var(--border); border-radius: 4px; background: none; color: var(--muted); font-family: 'DM Mono', monospace; font-size: 11px; cursor: pointer; transition: all 0.15s; white-space: nowrap; flex-shrink: 0; }
   .upload-btn:hover { border-color: var(--accent); color: var(--accent); }
   .upload-btn.uploaded { border-style: solid; border-color: var(--success); color: var(--success); }
-  .upload-btn.uploading { border-color: var(--accent2); color: var(--accent2); }
+
+  .delete-btn { display: flex; align-items: center; justify-content: center; width: 22px; height: 22px; border-radius: 4px; border: 1px solid transparent; background: none; color: var(--muted); font-size: 13px; cursor: pointer; transition: all 0.15s; flex-shrink: 0; line-height: 1; }
+  .delete-btn:hover { border-color: var(--danger); color: var(--danger); background: rgba(239,68,68,0.08); }
 
   .notes-input { width: 100%; background: none; border: none; border-bottom: 1px solid transparent; color: var(--muted); font-family: 'DM Mono', monospace; font-size: 11px; padding: 2px 4px; outline: none; transition: border 0.15s; }
   .notes-input:focus { border-bottom-color: var(--accent); color: var(--text); }
   .notes-input::placeholder { color: #3a3a48; }
+
+  /* Confirm modal */
+  .confirm-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); display: none; align-items: center; justify-content: center; z-index: 200; }
+  .confirm-overlay.open { display: flex; }
+  .confirm-box { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 28px; width: 380px; }
+  .confirm-box h3 { font-family: 'Syne', sans-serif; font-size: 16px; font-weight: 700; margin-bottom: 8px; }
+  .confirm-box p { font-size: 12px; color: var(--muted); margin-bottom: 24px; line-height: 1.6; }
+  .confirm-btns { display: flex; gap: 10px; justify-content: flex-end; }
+  .btn-cancel { padding: 8px 18px; border: 1px solid var(--border); border-radius: 5px; background: none; color: var(--muted); font-family: 'DM Mono', monospace; font-size: 12px; cursor: pointer; }
+  .btn-cancel:hover { color: var(--text); border-color: var(--text); }
+  .btn-delete { padding: 8px 18px; border: 1px solid var(--danger); border-radius: 5px; background: rgba(239,68,68,0.1); color: var(--danger); font-family: 'DM Mono', monospace; font-size: 12px; cursor: pointer; }
+  .btn-delete:hover { background: rgba(239,68,68,0.2); }
 
   .hidden-upload { display: none; }
 </style>
@@ -155,6 +170,18 @@
   </div>
 </div>
 
+<!-- Confirm delete modal -->
+<div class="confirm-overlay" id="confirmOverlay">
+  <div class="confirm-box">
+    <h3>Delete Submission?</h3>
+    <p id="confirmText">This will remove the uploaded workbook for this person. They will need to re-upload.</p>
+    <div class="confirm-btns">
+      <button class="btn-cancel" id="confirmCancel">Cancel</button>
+      <button class="btn-delete" id="confirmDelete">Delete</button>
+    </div>
+  </div>
+</div>
+
 <input type="file" class="hidden-upload" id="hiddenUpload" accept=".pdf">
 
 <script>
@@ -212,6 +239,7 @@ let state = {};
 let currentWeek = 1;
 let currentRegion = 'all';
 let pendingUpload = null;
+let pendingDelete = null;
 let noteTimers = {};
 
 function sbHeaders() {
@@ -248,6 +276,7 @@ async function loadAllData() {
       attended: row.attended || false,
       uploaded: row.uploaded || false,
       fileName: row.file_name || null,
+      filePath: row.reasoning || null, // storing file path in reasoning column
       notes: row.summary || '',
     };
   });
@@ -262,6 +291,7 @@ async function saveRecord(name, week) {
     uploaded: s.uploaded,
     file_name: s.fileName,
     summary: s.notes || null,
+    reasoning: s.filePath || null,
   };
   const r = await fetch(`${SUPABASE_URL}/rest/v1/tracker`, {
     method: 'POST',
@@ -273,7 +303,7 @@ async function saveRecord(name, week) {
 
 function getS(name, week) {
   const k = `${name}__w${week}`;
-  if (!state[k]) state[k] = {attended:false, uploaded:false, fileName:null, notes:''};
+  if (!state[k]) state[k] = {attended:false, uploaded:false, fileName:null, filePath:null, notes:''};
   return state[k];
 }
 
@@ -401,13 +431,8 @@ function render() {
       const row = document.createElement('div');
       row.className = 'person-row';
 
-      let uploadLabel = '↑ Upload PDF';
-      let uploadClass = 'upload-btn';
-      if (s.uploaded) {
-        const fname = s.fileName || 'Submitted';
-        uploadLabel = '✓ ' + (fname.length > 14 ? fname.substring(0,14)+'…' : fname);
-        uploadClass = 'upload-btn uploaded';
-      }
+      const fname = s.fileName || '';
+      const shortName = fname.length > 14 ? fname.substring(0,14)+'…' : fname;
 
       row.innerHTML = `
         <div class="person-name">${person.name}</div>
@@ -415,12 +440,16 @@ function render() {
           <input type="checkbox" ${s.attended?'checked':''} class="att-check">
           <span class="att-lbl">${s.attended?'Yes':'No'}</span>
         </div>
-        <div style="display:flex;align-items:center;gap:10px;">
-          <button class="${uploadClass}">${uploadLabel}</button>
+        <div class="workbook-cell">
           <span class="status-badge ${s.uploaded?'status-submitted':'status-missing'}">${s.uploaded?'In':'Missing'}</span>
+          ${s.uploaded
+            ? `<button class="upload-btn uploaded" title="${fname}">✓ ${shortName}</button>
+               <button class="delete-btn" title="Remove submission">✕</button>`
+            : `<button class="upload-btn">↑ Upload PDF</button>`
+          }
         </div>
         <div>
-          <input type="text" class="notes-input" placeholder="Add note..." value="${s.notes||''}">
+          <input type="text" class="notes-input" placeholder="Add note..." value="${(s.notes||'').replace(/"/g,'&quot;')}">
         </div>
       `;
 
@@ -437,6 +466,14 @@ function render() {
         document.getElementById('hiddenUpload').click();
       });
 
+      if (s.uploaded) {
+        row.querySelector('.delete-btn').addEventListener('click', () => {
+          pendingDelete = {name:person.name, week:currentWeek};
+          document.getElementById('confirmText').textContent = `This will remove the uploaded workbook for ${person.name} — Week ${currentWeek}. They will need to re-upload.`;
+          document.getElementById('confirmOverlay').classList.add('open');
+        });
+      }
+
       row.querySelector('.notes-input').addEventListener('input', e => {
         getS(person.name,currentWeek).notes = e.target.value;
         const k = `${person.name}__w${currentWeek}`;
@@ -450,15 +487,48 @@ function render() {
   }
 }
 
+// Delete confirm
+document.getElementById('confirmCancel').addEventListener('click', () => {
+  document.getElementById('confirmOverlay').classList.remove('open');
+  pendingDelete = null;
+});
+
+document.getElementById('confirmDelete').addEventListener('click', async () => {
+  if (!pendingDelete) return;
+  const {name, week} = pendingDelete;
+  const s = getS(name, week);
+
+  document.getElementById('confirmOverlay').classList.remove('open');
+  setSyncStatus('syncing');
+
+  // Delete from storage if we have the path
+  if (s.filePath) {
+    await fetch(`${SUPABASE_URL}/storage/v1/object/workbooks/${s.filePath}`, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${SUPABASE_KEY}`,
+        'apikey': SUPABASE_KEY,
+      }
+    });
+  }
+
+  // Clear record
+  s.uploaded = false;
+  s.fileName = null;
+  s.filePath = null;
+  await saveRecord(name, week);
+
+  pendingDelete = null;
+  render();
+});
+
+// File upload
 document.getElementById('hiddenUpload').addEventListener('change', async e => {
   const file = e.target.files[0];
   if (!file || !pendingUpload) return;
   const {name, week} = pendingUpload;
   const s = getS(name, week);
 
-  const uploadBtn = document.querySelector(`[data-uploading="${name}"]`);
-
-  // Upload to Supabase Storage
   const filePath = `week${week}/${name.replace(/\s+/g,'_')}_${Date.now()}.pdf`;
   setSyncStatus('syncing');
 
@@ -475,6 +545,7 @@ document.getElementById('hiddenUpload').addEventListener('change', async e => {
   if (uploadResp.ok) {
     s.uploaded = true;
     s.fileName = file.name;
+    s.filePath = filePath;
     await saveRecord(name, week);
   } else {
     setSyncStatus('error');

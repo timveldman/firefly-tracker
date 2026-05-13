@@ -494,19 +494,31 @@ document.getElementById('hiddenUpload').addEventListener('change', async e => {
   s.reasoning = null;
   render();
 
-  const base64 = await new Promise((res,rej) => {
-    const r = new FileReader();
-    r.onload = () => res(r.result.split(',')[1]);
-    r.onerror = rej;
-    r.readAsDataURL(file);
+  // Upload to Supabase Storage first
+  const filePath = `week${week}/${name.replace(/\s+/g,'_')}_${Date.now()}.pdf`;
+  const uploadResp = await fetch(`${SUPABASE_URL}/storage/v1/object/workbooks/${filePath}`, {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${SUPABASE_KEY}`,
+      'apikey': SUPABASE_KEY,
+      'Content-Type': 'application/pdf',
+    },
+    body: file
   });
 
-  analyzeWorkbook(name, week, base64);
+  if (!uploadResp.ok) {
+    s.analyzing = false;
+    s.summary = 'Upload failed — please try again.';
+    render();
+    return;
+  }
+
+  analyzeWorkbook(name, week, filePath);
   e.target.value = '';
   pendingUpload = null;
 });
 
-async function analyzeWorkbook(name, week, base64) {
+async function analyzeWorkbook(name, week, filePath) {
   const s = getS(name, week);
   const wi = WEEKS[week-1];
   try {
@@ -517,9 +529,9 @@ async function analyzeWorkbook(name, week, base64) {
         'Authorization': `Bearer ${SUPABASE_KEY}`
       },
       body: JSON.stringify({
-        pdfBase64: base64,
+        filePath,
         participantName: name,
-        week: week,
+        week,
         weekTopic: wi.topic
       })
     });

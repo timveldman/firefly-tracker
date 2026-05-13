@@ -60,38 +60,55 @@
   .week-pill:hover { border-color: var(--accent); color: var(--text); }
   .week-pill.active { background: var(--accent); border-color: var(--accent); color: #000; font-weight: 500; }
 
+  /* Deadline alert banner */
+  .deadline-banner { display: none; border-radius: 8px; padding: 14px 18px; margin-bottom: 16px; font-size: 12px; line-height: 1.6; }
+  .deadline-banner.urgent { background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.3); color: #fca5a5; }
+  .deadline-banner.warning { background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.3); color: #fcd34d; }
+  .deadline-banner.passed { background: rgba(100,100,120,0.1); border: 1px solid var(--border); color: var(--muted); }
+  .deadline-banner.show { display: block; }
+  .deadline-banner strong { font-weight: 600; }
+  .missing-list { margin-top: 8px; display: flex; flex-wrap: wrap; gap: 6px; }
+  .missing-chip { background: rgba(0,0,0,0.2); border-radius: 4px; padding: 2px 8px; font-size: 11px; }
+
   .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 24px; }
   .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 16px; }
   .stat-card .lbl { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
   .stat-card .val { font-family: 'Syne', sans-serif; font-size: 28px; font-weight: 800; }
 
-  .table-header { display: grid; grid-template-columns: 200px 110px 200px 1fr; gap: 12px; padding: 10px 16px; font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid var(--border); margin-bottom: 4px; }
+  .table-header { display: grid; grid-template-columns: 190px 100px 240px 1fr; gap: 12px; padding: 10px 16px; font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid var(--border); margin-bottom: 4px; }
   .tier-label { font-size: 10px; color: var(--accent2); text-transform: uppercase; letter-spacing: 2px; padding: 8px 16px; background: rgba(251,191,36,0.05); border-left: 2px solid var(--accent2); margin-bottom: 4px; margin-top: 8px; }
-  .person-row { display: grid; grid-template-columns: 200px 110px 200px 1fr; gap: 12px; padding: 10px 16px; border-bottom: 1px solid rgba(42,42,53,0.5); align-items: center; transition: background 0.1s; }
+  .person-row { display: grid; grid-template-columns: 190px 100px 240px 1fr; gap: 12px; padding: 10px 16px; border-bottom: 1px solid rgba(42,42,53,0.5); align-items: center; transition: background 0.1s; }
   .person-row:hover { background: var(--surface2); }
+  .person-row.overdue { background: rgba(239,68,68,0.04); }
   .person-name { font-size: 13px; }
 
   .checkbox-wrap { display: flex; align-items: center; gap: 8px; }
   .checkbox-wrap input[type="checkbox"] { width: 16px; height: 16px; accent-color: var(--accent); cursor: pointer; }
   .att-lbl { font-size: 11px; color: var(--muted); }
 
-  .workbook-cell { display: flex; align-items: center; gap: 8px; }
+  .workbook-cell { display: flex; align-items: center; gap: 6px; flex-wrap: nowrap; }
   .status-badge { display: inline-block; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: 500; flex-shrink: 0; }
   .status-submitted { background: rgba(34,197,94,0.15); color: var(--success); }
   .status-missing { background: rgba(100,100,120,0.15); color: var(--muted); }
+  .status-overdue { background: rgba(239,68,68,0.15); color: var(--danger); }
+  .status-late { background: rgba(245,158,11,0.15); color: var(--warning); }
+
+  .timing-tag { font-size: 10px; color: var(--muted); white-space: nowrap; }
+  .timing-tag.on-time { color: var(--success); }
+  .timing-tag.late { color: var(--warning); }
+
+  .icon-btn { display: flex; align-items: center; justify-content: center; width: 26px; height: 26px; border-radius: 4px; border: 1px solid var(--border); background: none; color: var(--muted); font-size: 13px; cursor: pointer; transition: all 0.15s; flex-shrink: 0; }
+  .icon-btn.view-icon:hover { border-color: var(--accent2); color: var(--accent2); }
+  .icon-btn.danger:hover { border-color: var(--danger); color: var(--danger); background: rgba(239,68,68,0.08); }
 
   .upload-btn { display: flex; align-items: center; gap: 5px; padding: 4px 10px; border: 1px dashed var(--border); border-radius: 4px; background: none; color: var(--muted); font-family: 'DM Mono', monospace; font-size: 11px; cursor: pointer; transition: all 0.15s; white-space: nowrap; flex-shrink: 0; }
   .upload-btn:hover { border-color: var(--accent); color: var(--accent); }
   .upload-btn.uploaded { border-style: solid; border-color: var(--success); color: var(--success); }
 
-  .delete-btn { display: flex; align-items: center; justify-content: center; width: 22px; height: 22px; border-radius: 4px; border: 1px solid transparent; background: none; color: var(--muted); font-size: 13px; cursor: pointer; transition: all 0.15s; flex-shrink: 0; line-height: 1; }
-  .delete-btn:hover { border-color: var(--danger); color: var(--danger); background: rgba(239,68,68,0.08); }
-
   .notes-input { width: 100%; background: none; border: none; border-bottom: 1px solid transparent; color: var(--muted); font-family: 'DM Mono', monospace; font-size: 11px; padding: 2px 4px; outline: none; transition: border 0.15s; }
   .notes-input:focus { border-bottom-color: var(--accent); color: var(--text); }
   .notes-input::placeholder { color: #3a3a48; }
 
-  /* Confirm modal */
   .confirm-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); display: none; align-items: center; justify-content: center; z-index: 200; }
   .confirm-overlay.open { display: flex; }
   .confirm-box { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 28px; width: 380px; }
@@ -158,6 +175,7 @@
 
   <div class="main">
     <div class="week-selector" id="weekSelector"></div>
+    <div class="deadline-banner" id="deadlineBanner"></div>
     <div class="stats-row">
       <div class="stat-card"><div class="lbl">Attended</div><div class="val" style="color:var(--success)" id="sAtt">—</div></div>
       <div class="stat-card"><div class="lbl">Submitted</div><div class="val" style="color:var(--accent)" id="sSub">—</div></div>
@@ -170,11 +188,10 @@
   </div>
 </div>
 
-<!-- Confirm delete modal -->
 <div class="confirm-overlay" id="confirmOverlay">
   <div class="confirm-box">
     <h3>Delete Submission?</h3>
-    <p id="confirmText">This will remove the uploaded workbook for this person. They will need to re-upload.</p>
+    <p id="confirmText">This will remove the uploaded workbook. They will need to re-upload.</p>
     <div class="confirm-btns">
       <button class="btn-cancel" id="confirmCancel">Cancel</button>
       <button class="btn-delete" id="confirmDelete">Delete</button>
@@ -185,17 +202,18 @@
 <input type="file" class="hidden-upload" id="hiddenUpload" accept=".pdf">
 
 <script>
+// Deadlines: submission due by 8pm the night before each discussion
 const WEEKS = [
-  {num:1,date:'May 21',topic:'General Session 1'},
-  {num:2,date:'May 28',topic:'General Sessions 2 & 3'},
-  {num:3,date:'Jun 4',topic:'General Session 4'},
-  {num:4,date:'Jun 11',topic:'General Session 5'},
-  {num:5,date:'Jun 18',topic:'Principle 1: What Drives Others'},
-  {num:6,date:'Jun 25',topic:'Principle 2: Create the Right Culture'},
-  {num:7,date:'Jul 2',topic:'Principle 3: Recruit Intelligently'},
-  {num:8,date:'Jul 9',topic:'Principles 4 & 5: Growth & Accountability'},
-  {num:9,date:'Jul 16',topic:'Principles 6 & 7: Compensation & Product'},
-  {num:10,date:'Jul 23',topic:'Principles 8–10: Systems & CX'},
+  {num:1, date:'May 21', topic:'General Session 1',          deadline: new Date('2026-05-20T20:00:00')},
+  {num:2, date:'May 28', topic:'General Sessions 2 & 3',     deadline: new Date('2026-05-27T20:00:00')},
+  {num:3, date:'Jun 4',  topic:'General Session 4',          deadline: new Date('2026-06-03T20:00:00')},
+  {num:4, date:'Jun 11', topic:'General Session 5',          deadline: new Date('2026-06-10T20:00:00')},
+  {num:5, date:'Jun 18', topic:'Principle 1: What Drives Others',        deadline: new Date('2026-06-17T20:00:00')},
+  {num:6, date:'Jun 25', topic:'Principle 2: Create the Right Culture',  deadline: new Date('2026-06-24T20:00:00')},
+  {num:7, date:'Jul 2',  topic:'Principle 3: Recruit Intelligently',     deadline: new Date('2026-07-01T20:00:00')},
+  {num:8, date:'Jul 9',  topic:'Principles 4 & 5: Growth & Accountability', deadline: new Date('2026-07-08T20:00:00')},
+  {num:9, date:'Jul 16', topic:'Principles 6 & 7: Compensation & Product',  deadline: new Date('2026-07-15T20:00:00')},
+  {num:10,date:'Jul 23', topic:'Principles 8–10: Systems & CX',          deadline: new Date('2026-07-22T20:00:00')},
 ];
 
 const REGIONS = {
@@ -217,7 +235,7 @@ const REGIONS = {
   apex: { name:'Apex', tiers:{
     Regional:['Brendan Von Vegesack'],
     Manager:['Karim Kerachni'],
-    'Team Lead':['Jonah Ganske','Preston Chan','Cerance Stephens','Ivan (TBD)','Nathan Leach','Eric Ciarroni','Konstantin Maliuga','Harrison Klein','Zach Logan']
+    'Team Lead':['Jonah Ganske','Preston Chan','Cerance Stephens','Ivan Lujic','Nathan Leach','Eric Ciarroni','Konstantin Maliuga','Harrison Klein','Zach Logan']
   }},
   dom: { name:'Dominion', tiers:{
     Regional:['Ben Vanderloo'],
@@ -276,7 +294,8 @@ async function loadAllData() {
       attended: row.attended || false,
       uploaded: row.uploaded || false,
       fileName: row.file_name || null,
-      filePath: row.reasoning || null, // storing file path in reasoning column
+      filePath: row.reasoning || null,
+      submittedAt: row.updated_at || null,
       notes: row.summary || '',
     };
   });
@@ -303,8 +322,83 @@ async function saveRecord(name, week) {
 
 function getS(name, week) {
   const k = `${name}__w${week}`;
-  if (!state[k]) state[k] = {attended:false, uploaded:false, fileName:null, filePath:null, notes:''};
+  if (!state[k]) state[k] = {attended:false, uploaded:false, fileName:null, filePath:null, submittedAt:null, notes:''};
   return state[k];
+}
+
+async function getSignedUrl(filePath) {
+  const r = await fetch(`${SUPABASE_URL}/storage/v1/object/sign/workbooks/${filePath}`, {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${SUPABASE_KEY}`,
+      'apikey': SUPABASE_KEY,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ expiresIn: 3600 })
+  });
+  if (!r.ok) return null;
+  const data = await r.json();
+  return `${SUPABASE_URL}/storage/v1${data.signedURL}`;
+}
+
+// Deadline logic
+function getDeadlineStatus(weekNum) {
+  const week = WEEKS[weekNum - 1];
+  const now = new Date();
+  const deadline = week.deadline;
+  const msToDeadline = deadline - now;
+  const hoursToDeadline = msToDeadline / (1000 * 60 * 60);
+
+  if (now > deadline) return 'passed';
+  if (hoursToDeadline <= 4) return 'urgent';   // under 4 hours
+  if (hoursToDeadline <= 24) return 'warning';  // under 24 hours
+  return 'open';
+}
+
+function isLateSubmission(submittedAt, weekNum) {
+  if (!submittedAt) return false;
+  const deadline = WEEKS[weekNum - 1].deadline;
+  return new Date(submittedAt) > deadline;
+}
+
+function updateDeadlineBanner(people) {
+  const banner = document.getElementById('deadlineBanner');
+  const week = WEEKS[currentWeek - 1];
+  const status = getDeadlineStatus(currentWeek);
+  const now = new Date();
+  const deadline = week.deadline;
+
+  const missing = people.filter(p => !getS(p.name, currentWeek).uploaded);
+
+  banner.className = 'deadline-banner';
+  banner.innerHTML = '';
+
+  if (status === 'passed') {
+    if (missing.length === 0) {
+      banner.classList.add('show', 'passed');
+      banner.innerHTML = `<strong>Deadline passed</strong> — All ${people.length} submissions received on time.`;
+    } else {
+      banner.classList.add('show', 'urgent');
+      const names = missing.map(p => `<span class="missing-chip">${p.name}</span>`).join('');
+      banner.innerHTML = `<strong>Deadline passed</strong> — ${missing.length} submission${missing.length>1?'s':''} still missing:<div class="missing-list">${names}</div>`;
+    }
+  } else if (status === 'urgent') {
+    const hrs = Math.floor((deadline - now) / (1000*60*60));
+    const mins = Math.floor(((deadline - now) % (1000*60*60)) / (1000*60));
+    if (missing.length > 0) {
+      const names = missing.map(p => `<span class="missing-chip">${p.name}</span>`).join('');
+      banner.classList.add('show', 'urgent');
+      banner.innerHTML = `<strong>⚠ Deadline in ${hrs}h ${mins}m</strong> — ${missing.length} still missing:<div class="missing-list">${names}</div>`;
+    }
+  } else if (status === 'warning') {
+    const hrs = Math.floor((deadline - now) / (1000*60*60));
+    if (missing.length > 0) {
+      const names = missing.map(p => `<span class="missing-chip">${p.name}</span>`).join('');
+      banner.classList.add('show', 'warning');
+      banner.innerHTML = `<strong>Deadline in ${hrs} hours</strong> — ${missing.length} still missing:<div class="missing-list">${names}</div>`;
+    }
+  }
+  // 'open' and no missing — no banner
 }
 
 async function boot() {
@@ -400,6 +494,11 @@ function render() {
   const people = currentRegion==='all' ? ALL_PEOPLE : ALL_PEOPLE.filter(p=>p.regionKey===currentRegion);
   updateStats(people);
   updateSidebar();
+  updateDeadlineBanner(currentRegion==='all' ? ALL_PEOPLE : people);
+
+  const deadlineStatus = getDeadlineStatus(currentWeek);
+  const deadlinePassed = deadlineStatus === 'passed';
+
   const list = document.getElementById('personList');
   list.innerHTML = '';
 
@@ -431,8 +530,27 @@ function render() {
       const row = document.createElement('div');
       row.className = 'person-row';
 
-      const fname = s.fileName || '';
-      const shortName = fname.length > 14 ? fname.substring(0,14)+'…' : fname;
+      // Determine status badge
+      let badgeClass = 'status-missing';
+      let badgeText = 'Missing';
+      let timingTag = '';
+
+      if (s.uploaded) {
+        const late = isLateSubmission(s.submittedAt, currentWeek);
+        if (late) {
+          badgeClass = 'status-late';
+          badgeText = 'Late';
+          timingTag = `<span class="timing-tag late">submitted late</span>`;
+        } else {
+          badgeClass = 'status-submitted';
+          badgeText = 'In';
+          timingTag = `<span class="timing-tag on-time">on time</span>`;
+        }
+      } else if (deadlinePassed) {
+        badgeClass = 'status-overdue';
+        badgeText = 'Overdue';
+        row.classList.add('overdue');
+      }
 
       row.innerHTML = `
         <div class="person-name">${person.name}</div>
@@ -441,12 +559,14 @@ function render() {
           <span class="att-lbl">${s.attended?'Yes':'No'}</span>
         </div>
         <div class="workbook-cell">
-          <span class="status-badge ${s.uploaded?'status-submitted':'status-missing'}">${s.uploaded?'In':'Missing'}</span>
-          ${s.uploaded
-            ? `<button class="upload-btn uploaded" title="${fname}">✓ ${shortName}</button>
-               <button class="delete-btn" title="Remove submission">✕</button>`
-            : `<button class="upload-btn">↑ Upload PDF</button>`
-          }
+          <span class="status-badge ${badgeClass}">${badgeText}</span>
+          ${s.uploaded ? `
+            ${timingTag}
+            <button class="icon-btn view-icon" title="Open PDF">⎘</button>
+            <button class="icon-btn danger del-btn" title="Delete submission">✕</button>
+          ` : `
+            <button class="upload-btn">↑ Upload PDF</button>
+          `}
         </div>
         <div>
           <input type="text" class="notes-input" placeholder="Add note..." value="${(s.notes||'').replace(/"/g,'&quot;')}">
@@ -461,16 +581,25 @@ function render() {
         await saveRecord(person.name, currentWeek);
       });
 
-      row.querySelector('.upload-btn').addEventListener('click', () => {
-        pendingUpload = {name:person.name, week:currentWeek};
-        document.getElementById('hiddenUpload').click();
-      });
-
       if (s.uploaded) {
-        row.querySelector('.delete-btn').addEventListener('click', () => {
+        row.querySelector('.view-icon').addEventListener('click', async () => {
+          const btn = row.querySelector('.view-icon');
+          btn.textContent = '…';
+          const url = await getSignedUrl(s.filePath);
+          btn.textContent = '⎘';
+          if (url) window.open(url, '_blank');
+          else alert('Could not open file. Try again.');
+        });
+
+        row.querySelector('.del-btn').addEventListener('click', () => {
           pendingDelete = {name:person.name, week:currentWeek};
           document.getElementById('confirmText').textContent = `This will remove the uploaded workbook for ${person.name} — Week ${currentWeek}. They will need to re-upload.`;
           document.getElementById('confirmOverlay').classList.add('open');
+        });
+      } else {
+        row.querySelector('.upload-btn').addEventListener('click', () => {
+          pendingUpload = {name:person.name, week:currentWeek};
+          document.getElementById('hiddenUpload').click();
         });
       }
 
@@ -487,7 +616,6 @@ function render() {
   }
 }
 
-// Delete confirm
 document.getElementById('confirmCancel').addEventListener('click', () => {
   document.getElementById('confirmOverlay').classList.remove('open');
   pendingDelete = null;
@@ -497,38 +625,30 @@ document.getElementById('confirmDelete').addEventListener('click', async () => {
   if (!pendingDelete) return;
   const {name, week} = pendingDelete;
   const s = getS(name, week);
-
   document.getElementById('confirmOverlay').classList.remove('open');
   setSyncStatus('syncing');
 
-  // Delete from storage if we have the path
   if (s.filePath) {
     await fetch(`${SUPABASE_URL}/storage/v1/object/workbooks/${s.filePath}`, {
       method: 'DELETE',
-      headers: {
-        'Authorization': `Bearer ${SUPABASE_KEY}`,
-        'apikey': SUPABASE_KEY,
-      }
+      headers: { 'Authorization': `Bearer ${SUPABASE_KEY}`, 'apikey': SUPABASE_KEY }
     });
   }
 
-  // Clear record
   s.uploaded = false;
   s.fileName = null;
   s.filePath = null;
+  s.submittedAt = null;
   await saveRecord(name, week);
-
   pendingDelete = null;
   render();
 });
 
-// File upload
 document.getElementById('hiddenUpload').addEventListener('change', async e => {
   const file = e.target.files[0];
   if (!file || !pendingUpload) return;
   const {name, week} = pendingUpload;
   const s = getS(name, week);
-
   const filePath = `week${week}/${name.replace(/\s+/g,'_')}_${Date.now()}.pdf`;
   setSyncStatus('syncing');
 
@@ -546,6 +666,7 @@ document.getElementById('hiddenUpload').addEventListener('change', async e => {
     s.uploaded = true;
     s.fileName = file.name;
     s.filePath = filePath;
+    s.submittedAt = new Date().toISOString();
     await saveRecord(name, week);
   } else {
     setSyncStatus('error');

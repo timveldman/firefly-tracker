@@ -171,6 +171,7 @@
     <button class="region-btn" data-region="wcs">WCS <span class="cnt" id="cntWCS">—</span></button>
     <button class="region-btn" data-region="apex">Apex <span class="cnt" id="cntAPEX">—</span></button>
     <button class="region-btn" data-region="dom">Dominion <span class="cnt" id="cntDOM">—</span></button>
+    <button class="region-btn" data-region="independent">Independent <span class="cnt" id="cntINDEPENDENT">—</span></button>
   </div>
 
   <div class="main">
@@ -242,6 +243,9 @@ const REGIONS = {
     Regional:['Ben Vanderloo'],
     Manager:['Kulwinder Singh','Vikram Perhar'],
     'Team Lead':['Gwen Marshal','Creed Fischer','Usama Javid','Adam Metzger','Zachary Pearson']
+  }},
+  independent: { name:'Independent', tiers:{
+    Manager:['Andrew Mercier']
   }}
 };
 
@@ -512,7 +516,7 @@ function updateStats(people) {
 }
 
 function updateSidebarKickoff() {
-  const rks = ['csp','sass','wcs','apex','dom'];
+  const rks = ['csp','sass','wcs','apex','dom','independent'];
   let total=0, totalAtt=0;
   rks.forEach(rk => {
     const pp = ALL_PEOPLE.filter(p=>p.regionKey===rk);
@@ -524,7 +528,7 @@ function updateSidebarKickoff() {
 }
 
 function updateSidebar() {
-  const rks = ['csp','sass','wcs','apex','dom'];
+  const rks = ['csp','sass','wcs','apex','dom','independent'];
   let total=0, totalSub=0;
   rks.forEach(rk => {
     const pp = ALL_PEOPLE.filter(p=>p.regionKey===rk);

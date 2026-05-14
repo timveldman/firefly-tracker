@@ -256,6 +256,7 @@ let SUPABASE_KEY = '';
 let state = {};
 let currentWeek = 1;
 let currentRegion = 'all';
+let isKickoff = false;
 let pendingUpload = null;
 let pendingDelete = null;
 let noteTimers = {};
@@ -289,7 +290,8 @@ async function loadAllData() {
   const rows = await r.json();
   state = {};
   rows.forEach(row => {
-    const k = `${row.person_name}__w${row.week}`;
+    const weekKey = row.week === 0 ? 'kickoff' : row.week;
+    const k = `${row.person_name}__w${weekKey}`;
     state[k] = {
       attended: row.attended || false,
       uploaded: row.uploaded || false,
@@ -304,8 +306,9 @@ async function loadAllData() {
 async function saveRecord(name, week) {
   setSyncStatus('syncing');
   const s = getS(name, week);
+  const dbWeek = week === 'kickoff' ? 0 : week;
   const record = {
-    person_name: name, week,
+    person_name: name, week: dbWeek,
     attended: s.attended,
     uploaded: s.uploaded,
     file_name: s.fileName,
@@ -447,13 +450,42 @@ document.getElementById('connectBtn').addEventListener('click', async () => {
 });
 
 const ws = document.getElementById('weekSelector');
+
+// Kickoff pill
+const kickoffBtn = document.createElement('button');
+kickoffBtn.className = 'week-pill';
+kickoffBtn.textContent = 'Kickoff · May 14';
+kickoffBtn.style.borderColor = 'var(--accent2)';
+kickoffBtn.style.color = 'var(--accent2)';
+kickoffBtn.addEventListener('click', () => {
+  isKickoff = true;
+  document.querySelectorAll('.week-pill').forEach(x => {
+    x.classList.remove('active');
+    x.style.borderColor = '';
+    x.style.color = '';
+  });
+  kickoffBtn.classList.add('active');
+  kickoffBtn.style.background = 'var(--accent2)';
+  kickoffBtn.style.borderColor = 'var(--accent2)';
+  kickoffBtn.style.color = '#000';
+  document.getElementById('currentWeekBadge').textContent = 'KICKOFF · MAY 14';
+  render();
+});
+ws.appendChild(kickoffBtn);
+
 WEEKS.forEach(w => {
   const b = document.createElement('button');
   b.className = 'week-pill' + (w.num===1?' active':'');
   b.textContent = `W${w.num} · ${w.date}`;
   b.addEventListener('click', () => {
+    isKickoff = false;
     currentWeek = w.num;
-    document.querySelectorAll('.week-pill').forEach(x=>x.classList.remove('active'));
+    document.querySelectorAll('.week-pill').forEach(x => {
+      x.classList.remove('active');
+      x.style.background = '';
+      x.style.borderColor = '';
+      x.style.color = '';
+    });
     b.classList.add('active');
     document.getElementById('currentWeekBadge').textContent = `WEEK ${w.num} · ${w.date.toUpperCase()}`;
     render();
@@ -478,6 +510,18 @@ function updateStats(people) {
   document.getElementById('sMis').textContent = people.length - sub;
 }
 
+function updateSidebarKickoff() {
+  const rks = ['csp','sass','wcs','apex','dom'];
+  let total=0, totalAtt=0;
+  rks.forEach(rk => {
+    const pp = ALL_PEOPLE.filter(p=>p.regionKey===rk);
+    const att = pp.filter(p=>getS(p.name,'kickoff').attended).length;
+    document.getElementById('cnt'+rk.toUpperCase()).textContent = `${att}/${pp.length}`;
+    total+=pp.length; totalAtt+=att;
+  });
+  document.getElementById('cntAll').textContent = `${totalAtt}/${total}`;
+}
+
 function updateSidebar() {
   const rks = ['csp','sass','wcs','apex','dom'];
   let total=0, totalSub=0;
@@ -492,6 +536,80 @@ function updateSidebar() {
 
 function render() {
   const people = currentRegion==='all' ? ALL_PEOPLE : ALL_PEOPLE.filter(p=>p.regionKey===currentRegion);
+
+  // Kickoff mode — attendance only
+  if (isKickoff) {
+    document.getElementById('deadlineBanner').className = 'deadline-banner';
+    document.getElementById('sAtt').textContent = `${people.filter(p=>getS(p.name,'kickoff').attended).length}/${people.length}`;
+    document.getElementById('sSub').textContent = '—';
+    document.getElementById('sMis').textContent = '—';
+    updateSidebarKickoff();
+
+    const list = document.getElementById('personList');
+    list.innerHTML = '';
+    document.querySelector('.table-header').innerHTML = '<div>Name</div><div>Attendance</div><div></div><div>Notes</div>';
+
+    let groups = {};
+    if (currentRegion==='all') {
+      for (const [rk, region] of Object.entries(REGIONS)) {
+        for (const [tier] of Object.entries(region.tiers)) {
+          groups[`${region.name} — ${tier}`] = ALL_PEOPLE.filter(p=>p.regionKey===rk && p.tier===tier);
+        }
+      }
+    } else {
+      const region = REGIONS[currentRegion];
+      for (const [tier] of Object.entries(region.tiers)) {
+        groups[tier] = ALL_PEOPLE.filter(p=>p.regionKey===currentRegion && p.tier===tier);
+      }
+    }
+
+    for (const [gname, gpeople] of Object.entries(groups)) {
+      if (!gpeople.length) continue;
+      const section = document.createElement('div');
+      const lbl = document.createElement('div');
+      lbl.className = 'tier-label';
+      lbl.textContent = gname;
+      section.appendChild(lbl);
+
+      gpeople.forEach(person => {
+        const s = getS(person.name, 'kickoff');
+        const row = document.createElement('div');
+        row.className = 'person-row';
+        row.innerHTML = `
+          <div class="person-name">${person.name}</div>
+          <div class="checkbox-wrap">
+            <input type="checkbox" ${s.attended?'checked':''} class="att-check">
+            <span class="att-lbl">${s.attended?'Yes':'No'}</span>
+          </div>
+          <div></div>
+          <div><input type="text" class="notes-input" placeholder="Add note..." value="${(s.notes||'').replace(/"/g,'&quot;')}"></div>
+        `;
+
+        row.querySelector('.att-check').addEventListener('change', async e => {
+          getS(person.name,'kickoff').attended = e.target.checked;
+          e.target.nextElementSibling.textContent = e.target.checked?'Yes':'No';
+          document.getElementById('sAtt').textContent = `${(currentRegion==='all'?ALL_PEOPLE:people).filter(p=>getS(p.name,'kickoff').attended).length}/${(currentRegion==='all'?ALL_PEOPLE:people).length}`;
+          updateSidebarKickoff();
+          await saveRecord(person.name, 'kickoff');
+        });
+
+        row.querySelector('.notes-input').addEventListener('input', e => {
+          getS(person.name,'kickoff').notes = e.target.value;
+          const k = `${person.name}__wkickoff`;
+          clearTimeout(noteTimers[k]);
+          noteTimers[k] = setTimeout(() => saveRecord(person.name, 'kickoff'), 1200);
+        });
+
+        section.appendChild(row);
+      });
+      list.appendChild(section);
+    }
+    return;
+  }
+
+  // Restore table header for normal weeks
+  document.querySelector('.table-header').innerHTML = '<div>Name</div><div>Attendance</div><div>Workbook</div><div>Notes</div>';
+
   updateStats(people);
   updateSidebar();
   updateDeadlineBanner(currentRegion==='all' ? ALL_PEOPLE : people);
@@ -637,7 +755,8 @@ document.getElementById('confirmDelete').addEventListener('click', async () => {
 
   // Delete the database row entirely
   const encodedName = encodeURIComponent(name);
-  await fetch(`${SUPABASE_URL}/rest/v1/tracker?person_name=eq.${encodedName}&week=eq.${week}`, {
+  const dbWeek = week === 'kickoff' ? 0 : week;
+  await fetch(`${SUPABASE_URL}/rest/v1/tracker?person_name=eq.${encodedName}&week=eq.${dbWeek}`, {
     method: 'DELETE',
     headers: {
       'apikey': SUPABASE_KEY,
